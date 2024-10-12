@@ -701,17 +701,17 @@ function UnitDef_Post(name, uDef)
 
 		--assign the masses
 		if tinyMassesTable[name] then
-			uDef.mass = sizeMasses.tiny * colossalMassesTable[name]
+			uDef.mass = sizeMasses.tiny * tinyMassesTable[name]
 		elseif smallMassesTable[name] then
-			uDef.mass = sizeMasses.small * colossalMassesTable[name]
+			uDef.mass = sizeMasses.small * smallMassesTable[name]
 		elseif mediumMassesTable[name] then
-			uDef.mass = sizeMasses.medium * colossalMassesTable[name]
+			uDef.mass = sizeMasses.medium * mediumMassesTable[name]
 		elseif largeMassesTable[name] then
-			uDef.mass = sizeMasses.large * colossalMassesTable[name]
+			uDef.mass = sizeMasses.large * largeMassesTable[name]
 		elseif hugeMassesTable[name] then
-			uDef.mass = sizeMasses.huge * colossalMassesTable[name]
+			uDef.mass = sizeMasses.huge * hugeMassesTable[name]
 		elseif gargantuanMassesTable[name] then
-			uDef.mass = sizeMasses.gargantuan * colossalMassesTable[name]
+			uDef.mass = sizeMasses.gargantuan * gargantuanMassesTable[name]
 		elseif colossalMassesTable[name] then
 			uDef.mass = sizeMasses.colossal * colossalMassesTable[name]
 		else 
