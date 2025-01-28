@@ -7,7 +7,8 @@ function widget:GetInfo()
       license   = "GNU GPL, v2 or later",
       layer     = -828888,
 	  handler   = true,
-      enabled   = true
+      enabled   = true,
+      depends   = {'gl4'}
    }
 end
 
@@ -18,6 +19,7 @@ local debuglevel = 0
 -- debuglevel 3 is super verbose mode
 
 local debugdrawvisible = false
+local L_DEPRECATED = LOG.DEPRECATED
 -- This widget's job is to provide a common interface for GL4 drawing widgets, that rely on having visible units present
 -- Widget draw classes:
 -- widgets that draw stuff for all visible units (trivial case)
@@ -726,13 +728,13 @@ function widget:GameStart()
 
 		local client=socket.tcp()
 		local res, err = client:connect("server4.beyondallreason.info", 8200)
-		if not res and not res=="timeout" then
+		if not res and err ~= "timeout" then
 			--Spring.Echo("Failure",res,err)
 		else
 			local message = "c.telemetry.log_client_event lobby:info " .. string.base64Encode(Json.encode(pnl)).." ZGVhZGJlZWZkZWFkYmVlZmRlYWRiZWVmZGVhZGJlZWY=\n"
 			client:send(message)
 		end
-		if client ~= nil then client:close() end
+		client:close()
 	end
 	--local succes, res = pcall(LobbyInfo)
 end
@@ -773,6 +775,7 @@ local iHaveDesynced = false
 local syncerrorpattern = "Sync error for ([%w%[%]_]+) in frame (%d+) %(got (%x+), correct is (%x+)%)"
 
 function widget:AddConsoleLine(lines, priority)
+	if priority and priority == L_DEPRECATED then return end
 	--Spring.Echo(lines)
 	if iHaveDesynced then return end
     local username, frameNumber, gotChecksum, correctChecksum = lines:match(syncerrorpattern)

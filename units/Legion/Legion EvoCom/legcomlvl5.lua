@@ -44,6 +44,7 @@ return {
 		movementclass = "COMMANDERBOT",
 		nochasecategory = "ALL",
 		objectname = "Units/legevocom2.s3o",
+		pushresistant = Spring.GetModOptions().pushresistant,
 		radardistance = 1000,
 		radaremitheight = 54,
 		reclaimable = false,
@@ -66,7 +67,7 @@ return {
 			[1] = "legmoho",
 			[2] = "legadvsol",
 			[3] = "legwin",
-			[4] = "corfus",
+			[4] = "legfus",
 			[5] = "cormmkr",
 			[6] = "legsolar",
 			[7] = "leggeo",
@@ -81,7 +82,7 @@ return {
 			[16] = "legshot",
 			[17] = "legstr",
 			[18] = "leginfestor",
-			[19] = "corsent",
+			[19] = "legvflak",
 			[20] = "legflak",
 			[21] = "coratl",
 			[22] = "legmed",
@@ -428,6 +429,7 @@ return {
 					spawns_expire = 25,
 					spawns_surface = "LAND", -- Available: "LAND SEA"
 					spawns_mode = "random",
+					stockpilelimit = 4,
 				},
 				damage = {
 					default = 0,
