@@ -892,7 +892,7 @@ function gadget:GameFrame(frameNum) --fires off every frame
         if thugFoundCheck and #thugFoundCheck > 0 then
         thugFound = true
         playVoiceline(soundfiles.sound4_D.name, 1, soundfiles.sound4_D.len)
-        moveCamera(2537, 141)
+        moveCamera(2537, 0141)
         scenarioHint = "Unlike the fast raiding grunts, thugs are light plasma bots capable of front lining while being repaired."
         giveScenarioHint()
         end
@@ -903,7 +903,7 @@ function gadget:GameFrame(frameNum) --fires off every frame
         if solarFoundCheck and #solarFoundCheck > 0 then
         solarFound = true
         playVoiceline(soundfiles.sound4_F.name, 1, soundfiles.sound4_F.len)
-        moveCamera(1322, 286)
+        moveCamera(1322, 0286)
         end
         end
 
@@ -912,7 +912,7 @@ function gadget:GameFrame(frameNum) --fires off every frame
         if defendersFoundCheck and #defendersFoundCheck > 0 then
         defendersFound = true
         playVoiceline(soundfiles.sound4_H.name, 1, soundfiles.sound4_H.len)
-        moveCamera(125, 600)
+        moveCamera(0125, 0600)
         end
         end
 
