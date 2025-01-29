@@ -2,7 +2,39 @@ if not gadgetHandler:IsSyncedCode() then
 	return
 end
 
-local stages = {}
+local stages = {
+    stage1_A = false,
+    stage1_B = false,
+    stage1_C = false,
+    stage1_D = false,
+    stage1_E = false,
+    stage1_F = false,
+    stage1_G = false,
+    stage2_A = false,
+    stage2_B = false,
+    stage2_B2 = false,
+    stage2_C = false,
+    stage2_D = false,
+    stage2_E = false,
+    stage3_A = false,
+    stage3_B = false,
+    stage3_B2 = false,
+    stage3_C = false,
+    stage3_D = false,
+    stage3_D2 = false,
+    stage3_E = false,
+    stage3_E2 = false,
+    stage4_A = false,
+    stage4_B = false,
+    stage4_C = false,
+    stage4_D = false,
+    stage5_A = false,
+    stage5_B = false,
+    stage5_C = false,
+    stage5_D = false,
+    stage5_E = false,
+}
+
 
 local triggers = {
 -- never meant to be

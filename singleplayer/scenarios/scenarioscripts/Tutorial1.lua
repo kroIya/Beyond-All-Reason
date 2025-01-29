@@ -2,24 +2,24 @@ if not gadgetHandler:IsSyncedCode() then
 	return
 end
 
-local stages = {  --outdated, don't look at comments
-    stage1_A = false, --Initial load
-    stage1_B = false, --Cutscene beginning sequence
-    stage1_C = false, --Cutscene trans hit sequence
-    stage2_A = false, --Wake up info dump
-    stage2_B = false, --Metal reclaim
-    stage2_C = false, --Energy reclaim
-    stage2_D = false, --Radar section
-    stage2_E = false, --Capture section
-    stage2_F = false, --Cloak section
+local stages = {
+    stage1_A = false,
+    stage1_B = false,
+    stage1_C = false,
+    stage2_A = false,
+    stage2_B = false,
+    stage2_C = false,
+    stage2_D = false,
+    stage2_E = false,
+    stage2_F = false,
     stage2_F2 = false,
     stage2_G = false,
-    stage3_A = false, --Dgun section
-    stage3_B = false, --Repair section
-    stage3_C = false, --Rez section
-    stage3_D = false, --Income section
-    stage3_E = false, --Production section
-    stage3_F = false, --final base assault
+    stage3_A = false,
+    stage3_B = false,
+    stage3_C = false,
+    stage3_D = false,
+    stage3_E = false,
+    stage3_F = false,
     stage4_A = false,
     stage4_A2 = false,
     stage4_B = false,
@@ -102,7 +102,7 @@ local cutsceneFigsEnemy = {}
 local unitIDs = {}
 
 local units = { --rotation is bs and the one dumped by luarules is meaningless; s0 e1 n2 w3
-    initialtrans = {name = "corseah", x = 7800, y = 500, z = 1700, rot = 3 , neutral = false, teamID = 1, queue = {{cmdID = CMD.MOVE, position = {px = 7400, py = 300, pz = 2300}},{cmdID = CMD.MOVE, position = {px = 7300, py = 300, pz = 3500}},{cmdID = CMD.MOVE, position = {px = 6900, py = 300, pz = 3300}},{cmdID = CMD.MOVE, position = {px = 6700, py = 38, pz = 2900}}}},
+    initialtrans = {name = "corseah", x = 7800, y = 500, z = 1700, rot = 3 , neutral = false, teamID = 0, queue = {{cmdID = CMD.MOVE, position = {px = 7400, py = 300, pz = 2300}},{cmdID = CMD.MOVE, position = {px = 7300, py = 300, pz = 3500}},{cmdID = CMD.MOVE, position = {px = 6900, py = 300, pz = 3300}},{cmdID = CMD.MOVE, position = {px = 6700, py = 38, pz = 2900}}}},
     cutscenevaliant1 = {name = "corveng", x = 7800, y = 500, z = 2000, rot = 3 , neutral = false, teamID = 1, queue = {{cmdID = CMD.FIGHT, position = {px = 6500, py = 200, pz = 3800}}, {cmdID = CMD.FIGHT, position = {px = 5300, py = 200, pz = 3800}}}},
     cutscenevaliant2 = {name = "corveng", x = 8000, y = 500, z = 2300, rot = 3 , neutral = false, teamID = 1, queue = {{cmdID = CMD.FIGHT, position = {px = 6700, py = 200, pz = 3800}}, {cmdID = CMD.FIGHT, position = {px = 5300, py = 200, pz = 2800}}}},
     cutscenevaliant3 = {name = "corveng", x = 8100, y = 500, z = 2200, rot = 3 , neutral = false, teamID = 1, queue = {{cmdID = CMD.FIGHT, position = {px = 6800, py = 200, pz = 3800}}, {cmdID = CMD.FIGHT, position = {px = 5300, py = 200, pz = 1800}}}},
@@ -307,7 +307,7 @@ function gadget:UnitTaken(unitID, unitDefID, oldTeam, newTeam)
     if unitID == unitIDs.gauntlet and newTeam == 0 then
     setStage("stage3_E")
     currentObjective = "Capture the radar to allow the gauntlet to destroy the chainsaw."
-    scenarioHint = "Capture the nearby radar. \nKeep your weapons in hold-fire mode so that you don’t kill it. "
+    scenarioHint = "Capture the nearby radar. \nKeep your weapons in hold-fire mode so that you don’t kill it. \nYou no longer need to cloak your commander.  "
     updateStageUI()
     updateObjectiveUI()
     giveScenarioHint()
@@ -350,6 +350,8 @@ function gadget:UnitDestroyed(unitID, unitDefID)
     playVoiceline(soundfiles.sound2_A.name, 1, soundfiles.sound2_A.len)
     voiceDelayTarget = Spring.GetGameFrame() + soundfiles.sound2_A.len + 30
     Spring.SendLuaUIMsg("blackout|")
+    Spring.SendLuaUIMsg("RestoreSavedCamera")
+    moveCamera(6700, 2900)
     for i = 1, #cutsceneFigsAlly do
         if not Spring.GetUnitIsDead(cutsceneFigsAlly[i]) then
             Spring.DestroyUnit(cutsceneFigsAlly[i], false, true)
@@ -375,6 +377,9 @@ function gadget:UnitDestroyed(unitID, unitDefID)
     giveScenarioHint()
     setStage("stage2_E")
     playVoiceline(soundfiles.sound2_E.name, 1, soundfiles.sound2_E.len)
+    local x, y, z = Spring.GetUnitPosition(unitID)
+    Spring.Echo(unitID.."x: "..x.." z: "..z)
+    moveCamera(math.floor(x), math.floor(z))
     end
     end
 
@@ -515,6 +520,17 @@ function gadget:GameFrame(frameNum) --fires off every frame
         })
         cutsceneFigsAlly = {unitIDs.cutscenevaliant1, unitIDs.cutscenevaliant2, unitIDs.cutscenevaliant3, unitIDs.cutscenevaliant4, unitIDs.cutscenevaliant5, unitIDs.cutscenevaliant6, unitIDs.cutscenevaliant7, unitIDs.cutscenevaliant8, unitIDs.cutscenevaliant9, unitIDs.cutscenevaliant10, unitIDs.cutscenevaliant11, unitIDs.cutscenevaliant12, unitIDs.cutscenevaliant13}
         playVoiceline(soundfiles.sound1_A.name, 1, soundfiles.sound1_A.len)
+        Spring.SendLuaUIMsg("SaveCamera")
+        Spring.SendLuaUIMsg("SelectUnit|"..unitIDs.initialtrans)
+    end
+
+    --sometimes looks at the sky?
+    --[[if n == 2 then
+        Spring.SetConfigString("CamModeName", "fps")
+    end]]
+
+    if n == 10 then
+        Spring.SendCommands("track")
     end
 
     if n>0 and n%30 == 0 then
@@ -596,9 +612,11 @@ function gadget:GameFrame(frameNum) --fires off every frame
         local x, y, z = Spring.GetUnitPosition(unitIDs.brokencom)
         if x < 6200 then
         currentObjective = "Explore the Canyon to find a way to escape"
+        scenarioHint = "Your commander auto repairs, and is always selectable with the hotkey “Tab”"
         setStage("stage2_C")
         updateStageUI()
         updateObjectiveUI()
+        giveScenarioHint()
         playVoiceline(soundfiles.sound2_C.name, 1, soundfiles.sound2_C.len)
         end
         end
@@ -731,6 +749,7 @@ function gadget:GameFrame(frameNum) --fires off every frame
         updateStageUI()
         updateObjectiveUI()
         playVoiceline(soundfiles.sound3_B.name, 1, soundfiles.sound3_B.len)
+        moveCamera(4704, 1104)
         end
         end
 
@@ -766,6 +785,7 @@ function gadget:GameFrame(frameNum) --fires off every frame
         playVoiceline(soundfiles.sound4_A.name, 1, soundfiles.sound4_A.len)
         currentObjective = "Use your D-Gun to destroy a wall section."
         scenarioHint = "Press “D” to spent 500 energy to fire your disintegration gun. \nIt destroys ANY unit or building it touches, friend or foe."
+        moveCamera(3935, 2138)
         updateStageUI()
         updateObjectiveUI()
         giveScenarioHint()
@@ -779,6 +799,8 @@ function gadget:GameFrame(frameNum) --fires off every frame
         setStage("stage4_A2")
         playVoiceline(soundfiles.sound4_A2.name, 1, soundfiles.sound4_A2.len)
         currentObjective = "Defeat the Centurions and meet with your reinforcements."
+        local cx, cy, cz = Spring.GetUnitPosition(unitIDs.centpatrol1)
+        moveCamera(math.floor(cx), math.floor(cz))
         updateStageUI()
         updateObjectiveUI()
         end
@@ -870,6 +892,7 @@ function gadget:GameFrame(frameNum) --fires off every frame
         if thugFoundCheck and #thugFoundCheck > 0 then
         thugFound = true
         playVoiceline(soundfiles.sound4_D.name, 1, soundfiles.sound4_D.len)
+        moveCamera(2537, 141)
         scenarioHint = "Unlike the fast raiding grunts, thugs are light plasma bots capable of front lining while being repaired."
         giveScenarioHint()
         end
@@ -880,6 +903,7 @@ function gadget:GameFrame(frameNum) --fires off every frame
         if solarFoundCheck and #solarFoundCheck > 0 then
         solarFound = true
         playVoiceline(soundfiles.sound4_F.name, 1, soundfiles.sound4_F.len)
+        moveCamera(1322, 286)
         end
         end
 
@@ -888,6 +912,7 @@ function gadget:GameFrame(frameNum) --fires off every frame
         if defendersFoundCheck and #defendersFoundCheck > 0 then
         defendersFound = true
         playVoiceline(soundfiles.sound4_H.name, 1, soundfiles.sound4_H.len)
+        moveCamera(125, 600)
         end
         end
 

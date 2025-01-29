@@ -71,6 +71,9 @@ function widget:TextCommand(command)
     if command == "spring" then
         Spring.SetConfigString("CamModeName", "spring")
     end
+    if command == "fpscam" then
+        Spring.SetConfigString("CamModeName", "fps")
+    end
     return false
 end
 
@@ -169,9 +172,17 @@ function widget:RecvLuaMsg(msg, playerID)
         Spring.SetConfigString("CamModeName", "spring")
         Spring.SetCameraState(autoSavedCamera or sensibleDefaultCamera, 0)
     end
+    if msg:find("RestoreSavedCamera") then
+        Spring.SetConfigString("CamModeName", "spring")
+        Spring.SetCameraState(savedCamera or sensibleDefaultCamera, 0)
+    end
     if msg:find("RestoreDefaultCamera") then
         Spring.SetConfigString("CamModeName", "spring")
         Spring.SetCameraState(sensibleDefaultCamera, 0)
+    end
+    if msg:find("SelectUnit|") then
+        local unitToSelect = tonumber(msg:sub(12))
+        Spring.SelectUnitArray({unitToSelect})
     end
 end
 
