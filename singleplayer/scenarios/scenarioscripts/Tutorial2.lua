@@ -292,8 +292,8 @@ function gadget:UnitFinished(unitID, unitDefID, unitTeam)
     if stages.stage1_D2 then
     if getNameFromID(unitID) == "corlab" then
     setStage("stage1_E")
-    currentObjective = "Produce a Construction Bot"
-    scenarioHint = "Select the bot lab and queue a Construction Bot (Hotkey “Z”).  \nConstructors have expanded build options, and can reclaim, repair, and provide build power. "
+    currentObjective = "Produce a Construction Bot. \n“Left click” queues a unit. \n“Right click” removes a queued unit."
+    scenarioHint = "Select the bot lab and queue a Construction Bot.  \nConstructors have expanded build options, and can reclaim, repair, and provide build power. "
     updateObjectiveUI()
     updateStageUI()
     playVoiceline(soundfiles.sound1_E.name, 1, soundfiles.sound1_E.len)
@@ -305,7 +305,7 @@ function gadget:UnitFinished(unitID, unitDefID, unitTeam)
     if stages.stage1_E2 then
     if getNameFromID(unitID) == "corck" then
     setStage("stage1_F")
-    currentObjective = "Create a graverobber"
+    currentObjective = "Create a graverobber (rezbot) from your botlab."
     scenarioHint = "Create a graverobber (rezbot) by selecting your lab and using the hotkey “X”."
     updateObjectiveUI()
     updateStageUI()
