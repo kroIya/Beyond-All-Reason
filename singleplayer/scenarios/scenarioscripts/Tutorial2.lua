@@ -152,7 +152,7 @@ local units = { --rotation is bs and the one dumped by luarules is meaningless; 
     stage3Banshee4 = {name = 'armkam', x = 1250, y = 2000, z = 3850, rot = 1 , teamID = 2, neutral = false, queue = {{cmdID = CMD.PATROL, position = {px = 1700, py = 2000, pz = 4400}}}},
     stage3Banshee5 = {name = 'armkam', x = 1350, y = 2000, z = 3950, rot = 1 , teamID = 2, neutral = false, queue = {{cmdID = CMD.PATROL, position = {px = 1650, py = 2000, pz = 4400}}}},
     stage3Banshee6 = {name = 'armkam', x = 1250, y = 2000, z = 3550, rot = 1 , teamID = 2, neutral = false, queue = {{cmdID = CMD.PATROL, position = {px = 1500, py = 2000, pz = 4450}}}},
-    enemylab = {name = 'armlab', x = 3100, y = 2241, z = 1600, rot = 0 , teamID = 2, neutral = false}
+    enemylab = {name = 'armlab', x = 3100, y = 2241, z = 1600, rot = 0 , teamID = 2, neutral = false},
 }
 
 local function setStage(stage)

@@ -24,6 +24,8 @@ local fadeStage
 local fadeDuration = 60
 local savedCamera
 local autoSavedCamera
+local timer
+local timerDuration
 
 local sensibleDefaultCamera = {
     dist=1416.48291,
@@ -184,13 +186,33 @@ function widget:RecvLuaMsg(msg, playerID)
         local unitToSelect = tonumber(msg:sub(12))
         Spring.SelectUnitArray({unitToSelect})
     end
+
+    if msg:find("StartTimer|") then
+    timer = Spring.GetTimer() --doing it with frames would've been infinitely better, but yay, timers
+    timerDuration = tonumber(msg:sub(12))
+    end
 end
 
 function widget:DrawScreen()
     local fontSize = 20
     gl.Color(1, 1, 1, 1)
     gl.Text("Current stage: "..(currentStage or "none"), 0.40 * vsx, 0.85 * vsy, fontSize, "v")
-    gl.Text("Current objective: "..(currentObjective or "none"), 0.40 * vsx, 0.83 * vsy, fontSize, "v")
+    if timer then
+        local timerNow = Spring.GetTimer()
+        local timerRemaining = timerDuration - Spring.DiffTimers(timerNow, timer)
+        local minutesRemaining = math.floor(timerRemaining/60)
+        local secondsRemaining = tostring(math.floor(timerRemaining%60))
+        if secondsRemaining and string.len(secondsRemaining) == 1 then
+            secondsRemaining = "0"..secondsRemaining 
+        end
+        local timerRemainingString = minutesRemaining..":"..secondsRemaining
+        if timerRemaining < 1 then
+            timer = nil
+        end
+        gl.Text("Current objective: "..((currentObjective or "none").." (Time remaining: "..timerRemainingString..")"), 0.40 * vsx, 0.83 * vsy, fontSize, "v")
+    else
+        gl.Text("Current objective: "..(currentObjective or "none"), 0.40 * vsx, 0.83 * vsy, fontSize, "v")
+    end
     if os.clock() - hintTimer <= hintDuration then
         gl.Text("Hint: "..scenarioHint, 0.40 * vsx, 0.70 * vsy, fontSize, "v")
     end
