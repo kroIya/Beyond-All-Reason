@@ -68,6 +68,8 @@ local richMexBuilt
 local researchStationApproached
 local disableCommander
 local pincersDead = 0
+local ai1enabled
+local ai2enabled
 
 local unitIDs = {}
 
@@ -280,11 +282,25 @@ local function playVoiceline(soundfile, volume, length)
 end
 
 local function enableAI1()
+    ai1enabled = true
     Spring.Echo("AI1 activated")
+    local ai1Units = Spring.GetTeamUnits(4)
+    for _, unitID in pairs(ai1Units) do
+        if getNameFromID(unitID) == "armmex" or getNameFromID(unitID) == "armwin" or getNameFromID(unitID) == "armsolar" or getNameFromID(unitID) == "armadvsol" or getNameFromID(unitID) == "armmakr" then
+        Spring.SetUnitHealth(unitID, {paralyze = 0})
+        end
+    end
 end
 
 local function enableAI2()
+    ai2enabled = true
     Spring.Echo("AI2 activated")
+    local ai2Units = Spring.GetTeamUnits(3)
+    for _, unitID in pairs(ai2Units) do
+        if getNameFromID(unitID) == "armmex" or getNameFromID(unitID) == "armwin" or getNameFromID(unitID) == "armsolar" or getNameFromID(unitID) == "armadvsol" or getNameFromID(unitID) == "armmakr" then
+        Spring.SetUnitHealth(unitID, {paralyze = 0})
+        end
+    end
 end
 
 local function startTimer(duration)
@@ -322,9 +338,19 @@ function gadget:UnitDestroyed(unitID, unitDefID)
 end
 
 function gadget:AllowCommand(unitID, unitDefID, unitTeam, cmdID, cmdParams, cmdOptions, cmdTag, synced)
+
     if disableCommander then
     if getNameFromID(unitID) == "corcom" then return false end
     end
+
+    if not ai1enabled then
+    if unitTeam == 4 then return false end
+    end
+
+    if not ai2enabled then
+    if unitTeam == 3 then return false end
+    end
+
     return true
 end
 
@@ -454,6 +480,12 @@ function gadget:GameFrame(frameNum) --fires off every frame
     })
     Spring.UnitAttach(unitIDs.initialtrans, unitIDs.corcom, 0)
     Spring.SendCommands("hideinterface")
+    --Spring.SetTeamResource(2, "es", 99999999)
+    --Spring.SetTeamResource(2, "ms", 99999999)
+    --Spring.SetTeamResource(3, "es", 99999999)
+    --Spring.SetTeamResource(3, "ms", 99999999)
+    --Spring.SetTeamResource(4, "es", 99999999)
+    --Spring.SetTeamResource(4, "ms", 99999999)
     updateObjectiveUI()
     updateStageUI()
     end
@@ -794,6 +826,34 @@ function gadget:GameFrame(frameNum) --fires off every frame
         for _, airID in pairs(airToClearCheck) do
             if airID ~= unitIDs.initialtrans or not stages.stage1_A then
             Spring.DestroyUnit(airID, false, true)
+            end
+        end
+        end
+
+        --emp inactive ai's resource generation 
+
+        local ai3Units = Spring.GetTeamUnits(2)
+        for _, unitID in pairs(ai3Units) do
+            if getNameFromID(unitID) == "armmex" or getNameFromID(unitID) == "armwin" or getNameFromID(unitID) == "armsolar" or getNameFromID(unitID) == "armadvsol" or getNameFromID(unitID) == "armmakr" then
+            Spring.SetUnitHealth(unitID, {paralyze = 9999})
+            end
+        end
+
+
+        if not ai1enabled then
+        local ai1Units = Spring.GetTeamUnits(4)
+        for _, unitID in pairs(ai1Units) do
+            if getNameFromID(unitID) == "armmex" or getNameFromID(unitID) == "armwin" or getNameFromID(unitID) == "armsolar" or getNameFromID(unitID) == "armadvsol" or getNameFromID(unitID) == "armmakr" then
+            Spring.SetUnitHealth(unitID, {paralyze = 9999})
+            end
+        end
+        end
+
+        if not ai2enabled then
+        local ai2Units = Spring.GetTeamUnits(3)
+        for _, unitID in pairs(ai2Units) do
+            if getNameFromID(unitID) == "armmex" or getNameFromID(unitID) == "armwin" or getNameFromID(unitID) == "armsolar" or getNameFromID(unitID) == "armadvsol" or getNameFromID(unitID) == "armmakr" then
+            Spring.SetUnitHealth(unitID, {paralyze = 9999})
             end
         end
         end
