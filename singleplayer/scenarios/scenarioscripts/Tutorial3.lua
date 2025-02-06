@@ -139,6 +139,11 @@ local units = { --rotation is bs and the one dumped by luarules is meaningless; 
     nano1 = {name = 'cornanotc', x = 273, y = 360, z = 6498, rot = 1 , teamID = 0, neutral = false},
     nano2 = {name = 'cornanotc', x = 351, y = 360, z = 6548, rot = 1 , teamID = 0, neutral = false},
     nano3 = {name = 'cornanotc', x = 278, y = 360, z = 6634, rot = 1 , teamID = 0, neutral = false},
+    scoutraid1 = {name = 'armfav', x = 2458, y = 25, z = 285, rot = -11359 , teamID = 2, neutral = false, queue = {{cmdID = CMD.PATROL, position = {px = 950, py = 113, pz = 7100}}}},
+    scoutraid2 = {name = 'armfav', x = 2630, y = 25, z = 363, rot = 5112 , teamID = 2, neutral = false, queue = {{cmdID = CMD.PATROL, position = {px = 950, py = 113, pz = 7100}}}},
+    scoutraid3 = {name = 'armfav', x = 2681, y = 26, z = 287, rot = 12982 , teamID = 2, neutral = false, queue = {{cmdID = CMD.PATROL, position = {px = 950, py = 113, pz = 7100}}}},
+    scoutraid4 = {name = 'armfav', x = 2481, y = 25, z = 379, rot = -4176 , teamID = 2, neutral = false, queue = {{cmdID = CMD.PATROL, position = {px = 950, py = 113, pz = 7100}}}},
+    scoutraid5 = {name = 'armfav', x = 2552, y = 24, z = 426, rot = -846 , teamID = 2, neutral = false, queue = {{cmdID = CMD.PATROL, position = {px = 950, py = 113, pz = 7100}}}},
     ambushtwilight = {name = 'armamex', x = 586, y = 24, z = 1260, rot = 0 , teamID = 2, neutral = false},
     ambushrover1 = {name = 'armfav', x = 92, y = 32, z = 660, rot = -29801 , teamID = 2, neutral = false, queue = {{cmdID = CMD.FIGHT, position = {px = 639, py = 24, pz = 1325}}}},
     ambushrover2 = {name = 'armfav', x = 130, y = 27, z = 737, rot = 11211 , teamID = 2, neutral = false, queue = {{cmdID = CMD.FIGHT, position = {px = 639, py = 24, pz = 1325}}}},
@@ -394,6 +399,7 @@ function gadget:UnitFinished(unitID, unitDefID, unitTeam)
     Spring.UnitAttach(unitIDs.reclaimtrans, unitIDs.reclaimveh, 0)
     playVoiceline(soundfiles.sound2_C.name, 1, soundfiles.sound2_C.len)
     moveCamera(1800, 8000)
+    currentObjective = "Capture 4 mexes"
     scenarioHint = "Reclaiming a living unit recovers 100% of the metal, but 0% of the energy. \nYou can area reclaim a specific unit via “E+Alt+Left Click Drag”, starting on the unit you want to reclaim."
     Spring.MarkerAddPoint(1695, 235, 7985, "Reclaimable LLTs")
     Spring.MarkerAddPoint(1882, 235, 7959, "Reclaimable LLTs")
@@ -552,8 +558,15 @@ function gadget:GameFrame(frameNum) --fires off every frame
         if windmillsQueuedPassed then
         setStage("stage2_A")
         playVoiceline(soundfiles.sound2_A.name, 1, soundfiles.sound2_A.len)
-        scenarioHint = "Taking open mexes before converting energy is always more efficient. \nTo find mexes you can use the metal view (Hotkey ”F7”)"
-        currentObjective = "Take 4 new mexes."
+        spawnUnitTable({
+            "scoutraid1",
+            "scoutraid2",
+            "scoutraid3",
+            "scoutraid4",
+            "scoutraid5",
+        })
+        scenarioHint = "Taking open mexes before converting energy is always more efficient. The metal view for your mini map will highlight them (Hotkey ”F7”)."
+        currentObjective = "Take the 2 close mexes to the North."
         Spring.MarkerAddPoint(1368, 33, 4285, "Open Mex")
         Spring.MarkerAddPoint(2156, 29, 4271, "Open Mex")
         Spring.MarkerAddPoint(568, 24, 1266, "Open Mex")
@@ -637,6 +650,11 @@ function gadget:GameFrame(frameNum) --fires off every frame
         local smallMexCheck1 = Spring.GetUnitsInCylinder(1368, 4285, 500, 0)
         local smallMexCheck2 = Spring.GetUnitsInCylinder(2156, 4271, 500, 0)
         if (smallMexCheck1 and #smallMexCheck1 > 0) or (smallMexCheck2 and #smallMexCheck2 > 0) then
+        if (smallMexCheck1 and #smallMexCheck1 > 0) then
+        moveCamera(1368, 4285)
+        else
+        moveCamera(2156, 4271)
+        end
         playVoiceline(soundfiles.sound2_B.name, 1, soundfiles.sound2_B.len)
         scenarioHint = "Not all metal deposits have the same value. \nThe extracted amount per second is displayed on the node, but can also be seen at the bottom left when selecting a mex."
         smallMexSeen = true
