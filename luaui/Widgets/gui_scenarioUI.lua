@@ -147,10 +147,10 @@ function widget:RecvLuaMsg(msg, playerID)
             Spring.SendLuaRulesMsg("SelectedUnit|"..digitNum..paddedi..selectedUnits[i])
         end
     end
-    if msg:find("GetGroupCount") then
-        local playerGroups = Spring.GetGroupList()
-        Spring.SendLuaRulesMsg("GroupCount|"..(#playerGroups or 0))
-    end
+    --if msg:find("GetGroupCount") then
+    --    local playerGroups = Spring.GetGroupList()
+    --    Spring.SendLuaRulesMsg("GroupCount|"..(#playerGroups or 0))
+    --end
     if msg:find("CheckAutoGroups|") then --ok this is getting really bad
     local autogroups = WG.autogroup.getGroups()
     local gruntDefID = tonumber(msg:sub(17))
@@ -203,7 +203,7 @@ function widget:DrawScreen()
         local minutesRemaining = math.floor(timerRemaining/60)
         local secondsRemaining = tostring(math.floor(timerRemaining%60))
         if secondsRemaining and string.len(secondsRemaining) == 1 then
-            secondsRemaining = "0"..secondsRemaining 
+            secondsRemaining = "0"..secondsRemaining
         end
         local timerRemainingString = minutesRemaining..":"..secondsRemaining
         if timerRemaining < 1 then

@@ -1,6 +1,5 @@
-if not gadgetHandler:IsSyncedCode() then
-	return
-end
+if gadgetHandler:IsSyncedCode() then
+    -- SYNCED
 
 local stages = {
     stage1_A = false,
@@ -770,7 +769,8 @@ function gadget:GameFrame(frameNum) --fires off every frame
         
         --stage3_A
         if stages.stage3_A then
-        Spring.SendLuaUIMsg("GetGroupCount")
+        --Spring.SendLuaUIMsg("GetGroupCount")
+        SendToUnsynced("GetGroupCount")
         if groupNumber > 1 then
         setStage("stage3_B")
         playVoiceline(soundfiles.sound3_B.name, 1, soundfiles.sound3_B.len)
@@ -1076,3 +1076,18 @@ function gadget:GameFrame(frameNum) --fires off every frame
     end
 
 end
+
+else
+    --UNSYNCED
+
+        local function GetGroupCount()
+            local playerGroups = Spring.GetGroupList()
+            Spring.SendLuaRulesMsg("GroupCount|"..(#playerGroups or 0))
+        end
+    
+        function gadget:Initialize()
+            if Spring.GetModOptions().scenariooptions then
+                gadgetHandler:AddSyncAction("GetGroupCount", GetGroupCount)
+            end
+        end
+    end
