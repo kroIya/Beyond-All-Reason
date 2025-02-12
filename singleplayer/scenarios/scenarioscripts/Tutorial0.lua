@@ -75,14 +75,13 @@ local scenarioHint
 local stageDelayTarget
 local voiceQueue = {}
 local voicePlayingDelay
-local camHeight
-local camHeightNew
 local selectedUnits = {}
-local groupNumber = 0
+local groupCountPassed
 local delayDollyActivation
 local dollyDuration
 
 --flags
+local camHeightPassed
 local respawnGrunts
 local deadGruntCounter = 0
 local deadActuatorGrunts = 0
@@ -288,12 +287,8 @@ end
 
 function gadget:RecvLuaMsg(msg, playerID)
 
-    if msg:find("camHeight|") then
-    if not camHeight then
-        camHeight = tonumber(msg:sub(11))
-    else
-        camHeightNew = tonumber(msg:sub(11))
-    end
+    if msg:find("camHeightPassed") then
+        camHeightPassed = true
     end
 
     if msg:find("SelectedUnit|") then
@@ -302,8 +297,8 @@ function gadget:RecvLuaMsg(msg, playerID)
         selectedUnits[i] = tonumber(msg:sub(15+digitNum))
     end
 
-    if msg:find("GroupCount|") then
-        groupNumber = tonumber(msg:sub(12))
+    if msg:find("GroupCountPassed") then
+        groupCountPassed = true
     end
 
     if msg:find("AutogroupCheckPassed") then
@@ -588,14 +583,14 @@ function gadget:GameFrame(frameNum) --fires off every frame
         updateStageUI()
         updateObjectiveUI()
         giveScenarioHint()
-        Spring.SendLuaUIMsg("GetCameraHeight")
+        SendToUnsynced("getCameraHeight")
         end
         end
 
         --stage1_C
         if stages.stage1_C then
-        Spring.SendLuaUIMsg("GetCameraHeight")
-        if camHeightNew and camHeight and camHeightNew + 100 < camHeight then
+        SendToUnsynced("getCameraHeight")
+        if camHeightPassed then
         setStage("stage1_D")
         playVoiceline(soundfiles.sound1_D.name, 1, soundfiles.sound1_D.len)
         scenarioHint = "Select individual units by left clicking. \nSelect a group of units by left clicking and dragging a box around the units, \nor holding shift and clicking on each unit individually. "
@@ -609,7 +604,7 @@ function gadget:GameFrame(frameNum) --fires off every frame
 
         --stage1_D
         if stages.stage1_D then
-        Spring.SendLuaUIMsg("GetSelectedUnits")
+        SendToUnsynced("getSelectedUnits")
         if selectedUnits and #selectedUnits == 5 then
             local gruntsSelected = true
             for _, unitID in pairs(selectedUnits) do
@@ -770,8 +765,8 @@ function gadget:GameFrame(frameNum) --fires off every frame
         --stage3_A
         if stages.stage3_A then
         --Spring.SendLuaUIMsg("GetGroupCount")
-        SendToUnsynced("GetGroupCount")
-        if groupNumber > 1 then
+        SendToUnsynced("getGroupCount")
+        if groupCountPassed then
         setStage("stage3_B")
         playVoiceline(soundfiles.sound3_B.name, 1, soundfiles.sound3_B.len)
         currentObjective = "Secure the next component to the North."
@@ -1079,15 +1074,66 @@ end
 
 else
     --UNSYNCED
+        local camHeight
+        local camHeightNew
 
-        local function GetGroupCount()
+        local function getGroupCount()
             local playerGroups = Spring.GetGroupList()
-            Spring.SendLuaRulesMsg("GroupCount|"..(#playerGroups or 0))
+            if playerGroups and #playerGroups > 1 then
+            Spring.SendLuaRulesMsg("GroupCountPassed")
+            end
         end
+
+        local function getCameraHeight()
+            local visibleUnits = Spring.GetVisibleUnits()
+            local gruntsInView = false
+            if visibleUnits and #visibleUnits>0 then
+                for _, unitID in pairs(visibleUnits) do
+                    local unitDefID = Spring.GetUnitDefID(unitID)
+                    if UnitDefs[unitDefID].name == "corak" then
+                    gruntsInView = true
+                    end
+                end
+            end
+            if gruntsInView then
+            local camsettings = Spring.GetCameraState()
+            if not camHeight then
+                camHeight = camsettings.height or camsettings.dist
+            else
+                camHeightNew = camsettings.height or camsettings.dist
+            end
+            if camHeightNew and camHeight and camHeightNew + 100 < camHeight then
+            Spring.SendLuaRulesMsg("camHeightPassed")
+            end
+            end
+        end
+        
+        local function getSelectedUnits() -- keeping the weird message for now
+            local selectedUnits = Spring.GetSelectedUnits()
+            local digitNum = string.len(tostring(#selectedUnits))
+            for i = 1, #selectedUnits do
+                local paddedi = tostring(i)
+                for x = 1, digitNum - string.len(tostring(i)) do
+                paddedi = "0"..paddedi
+                end
+                Spring.SendLuaRulesMsg("SelectedUnit|"..digitNum..paddedi..selectedUnits[i])
+            end
+        end
+
+        --can't access WG
+        --local function checkAutoGroups()
+        --    local autogroups = WG.autogroup.getGroups()
+        --    local gruntDefID = gruntDefID
+        --    if autogroups and autogroups[gruntDefID] and (autogroups[gruntDefID] == "1" or autogroups[gruntDefID] == 1) then
+        --    Spring.SendLuaRulesMsg("AutogroupCheckPassed")
+        --    end
+        --end
     
         function gadget:Initialize()
             if Spring.GetModOptions().scenariooptions then
-                gadgetHandler:AddSyncAction("GetGroupCount", GetGroupCount)
+                gadgetHandler:AddSyncAction("getGroupCount", getGroupCount)
+                gadgetHandler:AddSyncAction("getCameraHeight", getCameraHeight)
+                gadgetHandler:AddSyncAction("getSelectedUnits", getSelectedUnits)
             end
         end
     end

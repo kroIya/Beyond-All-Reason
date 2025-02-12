@@ -119,45 +119,17 @@ function widget:RecvLuaMsg(msg, playerID)
     if msg:find("blackout|") then
         blackoutTimer = os.clock()
     end
-    if msg:find("GetCameraHeight") then
-        local visibleUnits = Spring.GetVisibleUnits() -- I hate doing this in a widget
-        local gruntsInView = false
-        if visibleUnits and #visibleUnits>0 then
-            for _, unitID in pairs(visibleUnits) do
-                local unitDefID = Spring.GetUnitDefID(unitID)
-                if UnitDefs[unitDefID].name == "corak" then
-                gruntsInView = true
-                end
-            end
-        end
-        if gruntsInView then
-        local camsettings = Spring.GetCameraState()
-        local height = camsettings.height or camsettings.dist
-        Spring.SendLuaRulesMsg("camHeight|"..height)
-        end
-    end
-    if msg:find("GetSelectedUnits") then -- don't ask 
-        local selectedUnits = Spring.GetSelectedUnits()
-        local digitNum = string.len(tostring(#selectedUnits))
-        for i = 1, #selectedUnits do
-            local paddedi = tostring(i)
-            for x = 1, digitNum - string.len(tostring(i)) do
-            paddedi = "0"..paddedi
-            end
-            Spring.SendLuaRulesMsg("SelectedUnit|"..digitNum..paddedi..selectedUnits[i])
-        end
-    end
-    --if msg:find("GetGroupCount") then
-    --    local playerGroups = Spring.GetGroupList()
-    --    Spring.SendLuaRulesMsg("GroupCount|"..(#playerGroups or 0))
-    --end
-    if msg:find("CheckAutoGroups|") then --ok this is getting really bad
+
+    --black sheep
+    if msg:find("CheckAutoGroups|") then
     local autogroups = WG.autogroup.getGroups()
     local gruntDefID = tonumber(msg:sub(17))
     if autogroups and autogroups[gruntDefID] and (autogroups[gruntDefID] == "1" or autogroups[gruntDefID] == 1) then
     Spring.SendLuaRulesMsg("AutogroupCheckPassed")
     end
     end
+
+    --keeping the camera stuff in the widget because I don't want to copypaste it into every script. Wait for the cam gadget
     if msg:find("SetCameraPos|") then
         local camPos = Spring.GetCameraState()
         camPos.px = tonumber(msg:sub(14, 17))
