@@ -61,16 +61,21 @@ local parameters = {
 	-- Units
 	[triggerTypes.UnitExists] = { 
 		[1] = {
-			name = 'unitDefID',
-			required = true,
-			type = 'number',
+			name = 'name',
+			required = 'name or unitDefName',
+			type = 'string'
 		},
 		[2] = {
-			name = 'teamID',
-			required = false,
-			type = 'number',
+			name = 'unitDefName',
+			required = 'name or unitDefName',
+			type = 'string'
 		},
 		[3] = {
+			name = 'team',
+			required = false,
+			type = 'number'
+		},
+		[4] = {
 			name = 'quantity',
 			required = false,
 			type = 'number',
@@ -78,46 +83,81 @@ local parameters = {
 	},
 	[triggerTypes.UnitNotExists] = { 
 		[1] = {
-			name = 'unit',
-			required = true,
-			type = 'Unit',
+			name = 'name',
+			required = 'name or unitDefName',
+			type = 'string'
+		},
+		[2] = {
+			name = 'unitDefName',
+			required = 'name or unitDefName',
+			type = 'string'
+		},
+		[3] = {
+			name = 'team',
+			required = false,
+			type = 'number'
 		},
 	},
 	[triggerTypes.UnitKilled] = { 
 		[1] = {
-			name = 'unit',
-			required = true,
-			type = 'Unit'
+			name = 'name',
+			required = 'name or unitDefName',
+			type = 'string'
+		},
+		[2] = {
+			name = 'unitDefName',
+			required = 'name or unitDefName',
+			type = 'string'
+		},
+		[3] = {
+			name = 'team',
+			required = false,
+			type = 'number'
 		},
 	},
 	[triggerTypes.UnitCaptured] = { 
 		[1] = {
-			name = 'unit',
-			required = true,
-			type = 'Unit'
+			name = 'name',
+			required = 'name or unitDefName',
+			type = 'string'
+		},
+		[2] = {
+			name = 'unitDefName',
+			required = 'name or unitDefName',
+			type = 'string'
+		},
+		[3] = {
+			name = 'team',
+			required = false,
+			type = 'number'
 		},
 	},
 	[triggerTypes.UnitResurrected] = {  },
 	[triggerTypes.UnitEnteredLocation] = { 
 		[1] = {
-			name = 'unit',
-			required = true,
-			type = 'Unit'
+			name = 'name',
+			required = 'name or unitDefName or team',
+			type = 'string'
 		},
 		[2] = {
-			name = 'position',
-			required = true,
-			type = 'Vec2',
+			name = 'unitDefName',
+			required = 'name or unitDefName or team',
+			type = 'string'
 		},
 		[3] = {
-			name = 'width',
-			required = true,
-			type = 'number',
+			name = 'team',
+			required = 'name or unitDefName or team',
+			type = 'number'
 		},
 		[4] = {
-			name = 'height',
-			required = false,
-			type = 'number',
+			name = 'shape',
+			required = true,
+			type = 'string',
+		},
+		[5] = {
+			name = 'dimensions',
+			required = true,
+			type = 'table',
 		},
 	},
 	[triggerTypes.UnitLeftLocation] = {  },
@@ -126,16 +166,26 @@ local parameters = {
 	[triggerTypes.UnitUnspotted] = {  },
 	[triggerTypes.ConstructionStarted] = { 
 		[1] = {
-			name = 'unit',
+			name = 'unitDefName',
 			required = true,
-			type = 'Unit',
+			type = 'string'
+		},
+		[2] = {
+			name = 'team',
+			required = false,
+			type = 'number'
 		},
 	 },
 	[triggerTypes.ConstructionFinished] = { 
 		[1] = {
-			name = 'unit',
+			name = 'unitDefName',
 			required = true,
-			type = 'Unit',
+			type = 'string'
+		},
+		[2] = {
+			name = 'team',
+			required = false,
+			type = 'number'
 		},
 	 },
 
@@ -157,7 +207,7 @@ local parameters = {
 	-- Team
 	[triggerTypes.TeamDestroyed] = { 
 		[1] = {
-			name = 'teamID',
+			name = 'team',
 			required = true,
 			type = 'number',
 		},

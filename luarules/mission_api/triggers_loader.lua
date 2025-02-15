@@ -32,12 +32,23 @@ local function prevalidateTriggers()
 			Spring.Log('triggers_loader.lua', LOG.ERROR, "[Mission API] Trigger has no actions: " .. triggerID)
 		end
 
+		local requisites = {}
 		for _, parameter in pairs(parameters[trigger.type]) do
 			local value = trigger.parameters[parameter.name]
 			local type = type(value)
-
-			if value == nil and parameter.required then
-				Spring.Log('triggers_loader.lua', LOG.ERROR, "[Mission API] Trigger missing required parameter. Trigger: " .. triggerID .. ", Parameter: " .. parameter.name)
+			if parameter.required then
+				if value == nil and type(parameter.required) == 'boolean' then
+					Spring.Log('triggers_loader.lua', LOG.ERROR, "[Mission API] Trigger missing required parameter. Trigger: " .. triggerID .. ", Parameter: " .. parameter.name)
+				elseif type(parameter.required) == 'string' then
+					if not requisites[parameter.required] then
+						requisites[parameter.required] = false
+					end
+					if value ~= nil then
+						requisites[parameter.required] = true
+					end
+				else
+					Spring.Log('triggers_loader.lua', LOG.ERROR, "[Mission API] Unknown requirement type, not player-facing. Trigger: " ..triggerID .. ", Parameter: " .. parameter.name)
+				end
 			end
 
 			if value ~= nil and GG['MissionAPI'].Types[parameter.type] then
@@ -50,6 +61,11 @@ local function prevalidateTriggers()
 
 			elseif value ~= nil and type ~= parameter.type then
 				Spring.Log('triggers_loader.lua', LOG.ERROR, "[Mission API] Unexpected parameter type, expected " .. parameter.type .. ", got " .. type .. ". Trigger: " .. triggerID .. ", Parameter: " .. parameter.name)
+			end
+		end
+		for requisite, bool in pairs(requisites) do
+			if bool == false then
+				Spring.Log('actions_loader.lua', LOG.ERROR, "[Mission API] Action missing required parameter(s). Action: " ..actionID .. ", Parameter(s): " .. parameter.required)
 			end
 		end
 	end

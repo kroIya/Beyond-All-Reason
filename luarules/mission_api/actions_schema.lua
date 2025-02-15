@@ -76,11 +76,21 @@ local parameters = {
 	-- Orders
 	[actionTypes.IssueOrders] = {
 		[1] = {
-			name = 'unit',
-			required = true,
-			type = 'Unit'
+			name = 'name',
+			required = 'name or unitDefName',
+			type = 'string'
 		},
 		[2] = {
+			name = 'unitDefName',
+			required = 'name or unitDefName',
+			type = 'string'
+		},
+		[3] = {
+			name = 'team',
+			required = false,
+			type = 'number'
+		},
+		[4] = {
 			name = 'orders',
 			required = true,
 			type = 'table'
@@ -112,16 +122,26 @@ local parameters = {
 			type = 'number',
 		},
 		[4] = {
-			name = 'position',
+			name = 'position x',
 			required = true,
-			type = 'Vec2'
+			type = 'number'
 		},
 		[5] = {
-			name = 'facing',
-			required = true,
-			type = 'Direction'
+			name = 'position y',
+			required = false,
+			type = 'number'
 		},
 		[6] = {
+			name = 'position z',
+			required = true,
+			type = 'number'
+		},
+		[7] = {
+			name = 'facing',
+			required = false,
+			type = 'string'
+		},
+		[8] = {
 			name = 'construction',
 			required = false,
 			type = 'bool'
@@ -130,44 +150,89 @@ local parameters = {
 
 	[actionTypes.DespawnUnits] = {
 		[1] = {
-			name = 'unit',
-			required = true,
-			type = 'Unit',
+			name = 'name',
+			required = 'name or unitDefName',
+			type = 'string'
+		},
+		[2] = {
+			name = 'unitDefName',
+			required = 'name or unitDefName',
+			type = 'string'
+		},
+		[3] = {
+			name = 'team',
+			required = false,
+			type = 'number'
+		},
+		[4] = {
+			name = 'explode',
+			required = false,
+			type = 'boolean'
 		},
 	},
 	[actionTypes.SpawnWeapons] = {},
 	[actionTypes.SpawnEffects] = {},
 	[actionTypes.TransferUnits] = {
 		[1] = {
-			name = 'unit',
-			required = true,
-			type = 'Unit'
+			name = 'name',
+			required = 'name or unitDefName',
+			type = 'string'
 		},
 		[2] = {
+			name = 'unitDefName',
+			required = 'name or unitDefName',
+			type = 'string'
+		},
+		[3] = {
+			name = 'team',
+			required = false,
+			type = 'number'
+		},
+		[4] = {
 			name = 'newTeam',
 			required = true,
 			type = 'number'
 		},
-		[3] = {
+		[5] = {
 			name = 'given',
 			required = false,
-			type = 'bool'
+			type = 'boolean'
 		}
 	},
 
 	-- SFX
 	[actionTypes.SpawnExplosion] = {
 		[1] = {
-			name = 'position',
+			name = 'position x',
 			required = true,
-			type = 'Vec3'
+			type = 'number'
 		},
 		[2] = {
-			name = 'direction',
-			required = true,
-			type = 'Vec3'
+			name = 'position y',
+			required = false,
+			type = 'number'
 		},
 		[3] = {
+			name = 'position z',
+			required = true,
+			type = 'number'
+		},
+		[4] = {
+			name = 'direction x',
+			required = true,
+			type = 'number'
+		},
+		[5] = {
+			name = 'direction y',
+			required = true,
+			type = 'number'
+		},
+		[6] = {
+			name = 'direction z',
+			required = true,
+			type = 'number'
+		},
+		[7] = {
 			name = 'params',
 			required = true,
 			type = 'table'
@@ -196,14 +261,14 @@ local parameters = {
 	-- Win Condition
 	[actionTypes.Victory] = {
 		[1] = {
-			name = 'allyTeamIDs',
+			name = 'allyTeams',
 			required = true,
 			type = 'table'
 		}
 	},
 	[actionTypes.Defeat] = {
 		[1] = {
-			name = 'allyTeamIDs',
+			name = 'allyTeams',
 			required = true,
 			type = 'table'
 		}

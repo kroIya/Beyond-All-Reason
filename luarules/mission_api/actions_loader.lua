@@ -31,11 +31,24 @@ local function prevalidateActions()
 			Spring.Log('actions_loader.lua', LOG.ERROR, "[Mission API] Action missing type: " .. actionID)
 		end
 
+		local requisites = {}
 		for _, parameter in pairs(parameters[action.type]) do
 			local value = action.parameters[parameter.name]
 
-			if value == nil and parameter.required then
-				Spring.Log('actions_loader.lua', LOG.ERROR, "[Mission API] Action missing required parameter. Action: " ..actionID .. ", Parameter: " .. parameter.name)
+			if parameter.required then
+				if value == nil and type(parameter.required) == 'boolean' then
+					Spring.Log('actions_loader.lua', LOG.ERROR, "[Mission API] Action missing required parameter. Action: " ..actionID .. ", Parameter: " .. parameter.name)
+				elseif type(parameter.required) == 'string' then
+					if not requisites[parameter.required] then
+						requisites[parameter.required] = false
+					end
+					if value ~= nil then
+						requisites[parameter.required] = true
+					end
+				else
+					Spring.Log('actions_loader.lua', LOG.ERROR, "[Mission API] Unknown requirement type, not player-facing. Action: " ..actionID .. ", Parameter: " .. parameter.name)
+				end
+				end
 			end
 
 			if value ~= nil and GG['MissionAPI'].Types[parameter.type] then
@@ -48,7 +61,12 @@ local function prevalidateActions()
 				value:validate()
 			end
 		end
-	end
+
+		for requisite, bool in pairs(requisites) do
+			if bool == false then
+				Spring.Log('actions_loader.lua', LOG.ERROR, "[Mission API] Action missing required parameter(s). Action: " ..actionID .. ", Parameter(s): " .. parameter.required)
+			end
+		end
 end
 
 local function preprocessRawActions(rawActions)
