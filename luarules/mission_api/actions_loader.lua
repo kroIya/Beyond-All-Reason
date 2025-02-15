@@ -45,7 +45,7 @@ local function prevalidateActions()
 					if value ~= nil then
 						requisites[parameter.required] = true
 					end
-				else
+				elseif type(parameter.required) ~= 'string' and type(parameter.required) ~= 'boolean' then
 					Spring.Log('actions_loader.lua', LOG.ERROR, "[Mission API] Unknown requirement type, not player-facing. Action: " ..actionID .. ", Parameter: " .. parameter.name)
 				end
 			end

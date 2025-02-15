@@ -46,7 +46,7 @@ local function prevalidateTriggers()
 					if value ~= nil then
 						requisites[parameter.required] = true
 					end
-				else
+				elseif type(parameter.required) ~= 'string' and type(parameter.required) ~= 'boolean' then
 					Spring.Log('triggers_loader.lua', LOG.ERROR, "[Mission API] Unknown requirement type, not player-facing. Trigger: " ..triggerID .. ", Parameter: " .. parameter.name)
 				end
 			end
