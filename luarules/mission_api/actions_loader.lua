@@ -63,7 +63,7 @@ local function prevalidateActions()
 
 		for requisite, bool in pairs(requisites) do
 			if bool == false then
-				Spring.Log('actions_loader.lua', LOG.ERROR, "[Mission API] Action missing required parameter(s). Action: " ..actionID .. ", Parameter(s): " .. parameter.required)
+				Spring.Log('actions_loader.lua', LOG.ERROR, "[Mission API] Action missing required parameter(s). Action: " ..actionID .. ", Parameter(s): " .. requisite)
 			end
 		end
 	end
