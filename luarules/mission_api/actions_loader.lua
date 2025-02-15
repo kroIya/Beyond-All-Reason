@@ -48,7 +48,6 @@ local function prevalidateActions()
 				else
 					Spring.Log('actions_loader.lua', LOG.ERROR, "[Mission API] Unknown requirement type, not player-facing. Action: " ..actionID .. ", Parameter: " .. parameter.name)
 				end
-				end
 			end
 
 			if value ~= nil and GG['MissionAPI'].Types[parameter.type] then
@@ -67,6 +66,7 @@ local function prevalidateActions()
 				Spring.Log('actions_loader.lua', LOG.ERROR, "[Mission API] Action missing required parameter(s). Action: " ..actionID .. ", Parameter(s): " .. parameter.required)
 			end
 		end
+	end
 end
 
 local function preprocessRawActions(rawActions)

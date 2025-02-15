@@ -35,7 +35,7 @@ local function prevalidateTriggers()
 		local requisites = {}
 		for _, parameter in pairs(parameters[trigger.type]) do
 			local value = trigger.parameters[parameter.name]
-			local type = type(value)
+			local valueType = type(value)
 			if parameter.required then
 				if value == nil and type(parameter.required) == 'boolean' then
 					Spring.Log('triggers_loader.lua', LOG.ERROR, "[Mission API] Trigger missing required parameter. Trigger: " .. triggerID .. ", Parameter: " .. parameter.name)
@@ -53,14 +53,14 @@ local function prevalidateTriggers()
 
 			if value ~= nil and GG['MissionAPI'].Types[parameter.type] then
 				if value.__name ~= parameter.type then
-					local actualType = value.__name or type
+					local actualType = value.__name or valueType
 					Spring.Log('actions_loader.lua', LOG.ERROR, "[Mission API] Unexpected parameter type, expected " .. parameter.type .. ", got " .. actualType .. ". Action: " .. triggerID .. ", Parameter: " .. parameter.name)
 				elseif value.validate then 
 					value.validate('actions_loader.lua', 'Mission API') 
 				end
 
 			elseif value ~= nil and type ~= parameter.type then
-				Spring.Log('triggers_loader.lua', LOG.ERROR, "[Mission API] Unexpected parameter type, expected " .. parameter.type .. ", got " .. type .. ". Trigger: " .. triggerID .. ", Parameter: " .. parameter.name)
+				Spring.Log('triggers_loader.lua', LOG.ERROR, "[Mission API] Unexpected parameter type, expected " .. parameter.type .. ", got " .. valueType .. ". Trigger: " .. triggerID .. ", Parameter: " .. parameter.name)
 			end
 		end
 		for requisite, bool in pairs(requisites) do

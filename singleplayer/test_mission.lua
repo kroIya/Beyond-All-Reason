@@ -58,8 +58,6 @@ local actions = {
 	spawnHero = {
 		type = actionTypes.SpawnUnits,
 		parameters = {
-			name = 'hero',
-			unitDefName = 'coraca',
 			position = { x = 100, z = 200 },
 			quantity = 2,
 			facing = 'n',
