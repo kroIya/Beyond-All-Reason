@@ -75,7 +75,7 @@ local unitIDs = {}
 
 local units = { --rotation is bs and the one dumped by luarules is meaningless; s0 e1 n2 w3
     researchstation = {name = 'mission_command_tower', x = 6955, y = 11, z = 2040, rot = 0 , teamID = 5, neutral = true},
-    initialtrans = {name = 'corseah', x = 228, y = 800, z = 4577, rot = 0 , teamID = 1, neutral = false, queue = {{cmdID = CMD.MOVE, position = {px = 307, py = 2000, pz = 7753}}, {cmdID = CMD.UNLOAD_UNITS, position = {px = 2880, py = 265, pz = 8000}}, {cmdID = CMD.MOVE, position = {px = 328, py = 1300, pz = 7900}}}},
+    initialtrans = {name = 'corseah', x = 228, y = 800, z = 4577, rot = 0 , teamID = 1, neutral = false, queue = {{cmdID = CMD.MOVE, position = {px = 307, py = 2000, pz = 7753}}, {cmdID = CMD.UNLOAD_UNITS, position = {px = 1800, py = 265, pz = 8000}}, {cmdID = CMD.MOVE, position = {px = 328, py = 1300, pz = 7900}}}},
     initialfig1 = {name = 'corveng', x = 342, y = 800, z = 4791, rot = 0 , teamID = 1, neutral = false, queue = {{cmdID = CMD.MOVE, position = {px = 342, py = 1400, pz = 7914}}}},
     initialfig2 = {name = 'corveng', x = 303, y = 800, z = 4869, rot = 0 , teamID = 1, neutral = false, queue = {{cmdID = CMD.MOVE, position = {px = 303, py = 1400, pz = 7992}}}},
     initialfig3 = {name = 'corveng', x = 270, y = 800, z = 4927, rot = 0 , teamID = 1, neutral = false, queue = {{cmdID = CMD.MOVE, position = {px = 270, py = 1400, pz = 8050}}}},
@@ -437,7 +437,7 @@ function gadget:UnitUnloaded(unitID, unitDefID, unitTeam, transportID, transport
     Spring.SendCommands("hideinterface")
     setStage("stage1_B")
     currentObjective = "Head to the forward base."
-    Spring.MarkerAddPoint(1900, 101, 6550, "Forward Base")
+    Spring.MarkerAddPoint(1330, 116, 6949, "Forward Base")
     updateObjectiveUI()
     updateStageUI()
     playVoiceline(soundfiles.sound1_B.name, 1, soundfiles.sound1_B.len)
@@ -502,7 +502,7 @@ function gadget:GameFrame(frameNum) --fires off every frame
 
         --stage1_B
         if stages.stage1_B then
-        local baseRevealCheck = Spring.GetUnitsInRectangle(2000, 7406, 3500, 7800, 0)
+        local baseRevealCheck = Spring.GetUnitsInRectangle(1134, 7406, 2200, 7800, 0)
         if baseRevealCheck and #baseRevealCheck > 0 then
         setStage("stage1_C")
         for i=1, 47 do
