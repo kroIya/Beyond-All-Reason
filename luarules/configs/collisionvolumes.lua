@@ -205,6 +205,10 @@ pieceCollisionVolume['legerailtank'] = {
 	['10']={31,21,36, 0,6.4,2.3, 2,1},
 	--['10']={50,50,50,0,0,0,2,1},
 }
+pieceCollisionVolume['leginf'] = {
+	['1']={38,49,88, 0,22.8,14.3, 2,1},
+	['0']={35,37,88, 0,21,11, 2,1},
+}
 ---pieceCollisionVolume['legsrailt4'] = {
 ---	['0']={121,53,121,0,26,0,2,2},
 ---	['7']={26,26,132,0,7,20,2,4},
@@ -271,10 +275,6 @@ pieceCollisionVolume['cormist'] = {
 pieceCollisionVolume['corgarp'] = {
 	['0']={30,21,42,0,0,6,2,1},
 	['6']={16,7,15,0,-2,1.5,2,1},
-}
-pieceCollisionVolume['armflash'] = {
-	['0']={24,13,31,0,0,0,2,1},
-	['1']={16,12,16,0,0,0,2,1},
 }
 pieceCollisionVolume['armstump'] = {
 	['0']={34,18,40,0,-5,0,2,1},
@@ -370,6 +370,11 @@ pieceCollisionVolume['legcar'] = {
 	['4']={14,12,20,0,-2,-6,2,1},
 }
 
+pieceCollisionVolume['legmed'] = {
+	['0']={48,31,69,0,0,0,2,1},
+	['1']={7,25,15,0,35,-5,2,1},
+}
+
 --{60,80,60,  -- Volume X scale, Volume Y scale, Volume Z scale,
 --		    0,15,0,    -- Volume X offset, Volume Y offset, Volume Z offset,
 
@@ -385,9 +390,9 @@ pieceCollisionVolume['armshockwave'] = {
     ['2']={22,22,22,0,10,0,1,1},
     ['0']={60,65,60,0,20,0,1,1,0},
 }
-pieceCollisionVolume['leginfestor'] = {
-	['0']={38,23,45,0,7,0,1,1},
-	['16']={12,10,20,2,0,1,1,2},
+pieceCollisionVolume['legmohoconct'] = {
+	['0']={70,30,70,0,-3,0,1,1},
+	['1']={21,16,30,0,-3,-1,2,1},
 }
 
 for name, v in pairs(pieceCollisionVolume) do

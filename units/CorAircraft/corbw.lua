@@ -33,11 +33,11 @@ return {
 		upright = true,
 		usesmoothmesh = 0,
 		customparams = {
+			crashable = 0,
 			model_author = "Mr Bob",
 			normaltex = "unittextures/cor_normal.dds",
 			subfolder = "CorAircraft",
 			unitgroup = "emp",
-			crashable = 0,
 		},
 		sfxtypes = {
 			pieceexplosiongenerators = {
@@ -102,6 +102,9 @@ return {
 				turret = true,
 				weapontype = "BeamLaser",
 				weaponvelocity = 800,
+				customparams = {
+					noattackrangearc = 1,
+				},
 				damage = {
 					default = 600,
 				},
