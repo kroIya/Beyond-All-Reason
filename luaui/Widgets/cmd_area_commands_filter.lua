@@ -385,7 +385,7 @@ local UNIT = "unit"
 local allowedCommands = {
 	[CMD.ATTACK] = { handle = defaultHandler, allowedTargetTypes = { [UNIT] = true }, skipAlliedUnits = true },
 	[CMD.GUARD] = { handle = defaultHandler, allowedTargetTypes = { [UNIT] = true } },
-	[CMD.RECLAIM] = { handle = defaultHandler, allowedTargetTypes = { [UNIT] = true, [FEATURE] = true } },
+	[CMD.RECLAIM] = { handle = defaultHandler, allowedTargetTypes = { [UNIT] = true, [FEATURE] = true }, skipAlliedUnits = true },
 	[CMD.REPAIR] = { handle = defaultHandler, allowedTargetTypes = { [UNIT] = true } },
 	[CMD.CAPTURE] = { handle = defaultHandler, allowedTargetTypes = { [UNIT] = true } },
 	[GameCMD.UNIT_SET_TARGET] = { handle = defaultHandler, allowedTargetTypes = { [UNIT] = true } },
